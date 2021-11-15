@@ -6,6 +6,9 @@ import platform
 import subprocess
 import time
 from setuptools import Extension, dist, find_packages, setup
+import shutil
+import sys
+import warnings
 
 import torch
 from torch.utils.cpp_extension import (BuildExtension, CppExtension,
