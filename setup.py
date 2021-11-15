@@ -7,7 +7,6 @@ import time
 from setuptools import Extension, dist, find_packages, setup
 
 import torch
-from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
 dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1'])
 import numpy as np  # noqa: E402, isort:skip
@@ -214,25 +213,28 @@ def parse_requirements(fname='requirements.txt', with_version=True):
 
 if __name__ == '__main__':
     write_version_py()
+    add_mim_extension()
     setup(
         name='mmdet',
         version=get_version(),
-        description='Open MMLab Detection Toolbox and Benchmark',
+        description='OpenMMLab Detection Toolbox and Benchmark',
         long_description=readme(),
-        author='OpenMMLab',
-        author_email='chenkaidev@gmail.com',
+        long_description_content_type='text/markdown',
+        author='MMDetection Contributors',
+        author_email='openmmlab@gmail.com',
         keywords='computer vision, object detection',
         url='https://github.com/open-mmlab/mmdetection',
         packages=find_packages(exclude=('configs', 'tools', 'demo')),
-        package_data={'mmdet.ops': ['*/*.so']},
+        include_package_data=True,
         classifiers=[
-            'Development Status :: 4 - Beta',
+            'Development Status :: 5 - Production/Stable',
             'License :: OSI Approved :: Apache Software License',
             'Operating System :: OS Independent',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
+            'Programming Language :: Python :: 3.8',
+            'Programming Language :: Python :: 3.9',
         ],
         license='Apache License 2.0',
         setup_requires=parse_requirements('requirements/build.txt'),
@@ -244,58 +246,6 @@ if __name__ == '__main__':
             'build': parse_requirements('requirements/build.txt'),
             'optional': parse_requirements('requirements/optional.txt'),
         },
-        ext_modules=[
-            make_cuda_ext(
-                name='compiling_info',
-                module='mmdet.ops.utils',
-                sources=['src/compiling_info.cpp']),
-            make_cython_ext(
-                name='soft_nms_cpu',
-                module='mmdet.ops.nms',
-                sources=['src/soft_nms_cpu.pyx']),
-            make_cuda_ext(
-                name='nms_cpu',
-                module='mmdet.ops.nms',
-                sources=['src/nms_cpu.cpp']),
-            make_cuda_ext(
-                name='nms_cuda',
-                module='mmdet.ops.nms',
-                sources=['src/nms_cuda.cpp', 'src/nms_kernel.cu']),
-            make_cuda_ext(
-                name='roi_align_cuda',
-                module='mmdet.ops.roi_align',
-                sources=['src/roi_align_cuda.cpp', 'src/roi_align_kernel.cu']),
-            make_cuda_ext(
-                name='roi_pool_cuda',
-                module='mmdet.ops.roi_pool',
-                sources=['src/roi_pool_cuda.cpp', 'src/roi_pool_kernel.cu']),
-            make_cuda_ext(
-                name='deform_conv_cuda',
-                module='mmdet.ops.dcn',
-                sources=[
-                    'src/deform_conv_cuda.cpp',
-                    'src/deform_conv_cuda_kernel.cu'
-                ]),
-            make_cuda_ext(
-                name='deform_pool_cuda',
-                module='mmdet.ops.dcn',
-                sources=[
-                    'src/deform_pool_cuda.cpp',
-                    'src/deform_pool_cuda_kernel.cu'
-                ]),
-            make_cuda_ext(
-                name='sigmoid_focal_loss_cuda',
-                module='mmdet.ops.sigmoid_focal_loss',
-                sources=[
-                    'src/sigmoid_focal_loss.cpp',
-                    'src/sigmoid_focal_loss_cuda.cu'
-                ]),
-            make_cuda_ext(
-                name='masked_conv2d_cuda',
-                module='mmdet.ops.masked_conv',
-                sources=[
-                    'src/masked_conv2d_cuda.cpp', 'src/masked_conv2d_kernel.cu'
-                ]),
-        ],
+        ext_modules=[],
         cmdclass={'build_ext': BuildExtension},
         zip_safe=False)
