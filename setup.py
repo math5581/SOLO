@@ -7,6 +7,8 @@ import time
 from setuptools import Extension, dist, find_packages, setup
 
 import torch
+from torch.utils.cpp_extension import (BuildExtension, CppExtension,
+                                       CUDAExtension)
 
 dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1'])
 import numpy as np  # noqa: E402, isort:skip
